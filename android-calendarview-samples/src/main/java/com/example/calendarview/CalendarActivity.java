@@ -11,15 +11,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.tripadvisor.CalendarView.DateSelectableFilter;
-import static com.tripadvisor.CalendarView.OnInvalidDateSelectedListener;
 import static java.util.Calendar.HOUR_OF_DAY;
 import static java.util.Calendar.MILLISECOND;
 import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.SECOND;
 
 
-public class CalendarActivity extends Activity implements DateSelectableFilter, OnInvalidDateSelectedListener {
+public class CalendarActivity extends Activity{  //implements DateSelectableFilter, OnInvalidDateSelectedListener
 
     private CalendarView mCalendarView;
     private Calendar today = Calendar.getInstance();
@@ -51,7 +49,7 @@ public class CalendarActivity extends Activity implements DateSelectableFilter, 
         cal.set(MILLISECOND, 0);
     }
 
-    @Override
+    //@Override
     public boolean isDateSelectable(Date date) {
         boolean selectable = false;
         if (today.getTime().compareTo(date) <= 0) {
@@ -60,7 +58,7 @@ public class CalendarActivity extends Activity implements DateSelectableFilter, 
         return selectable;
     }
 
-    @Override
+    //@Override
     public void onInvalidDateSelected(Date date) {
         Log.d("CalendarActivity", "onInvalidDateSelected:" + date.toString());
     }

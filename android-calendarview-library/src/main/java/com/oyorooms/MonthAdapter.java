@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.tripadvisor.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
         }
 
         private void initDaysWeek(){
-            for (LinearLayout view : mWeeks) {
+            for (LinearLayout view : this.mWeeks) {
                 this.mDays.add((CalendarCellView)view.findViewById(R.id.day_1));
                 this.mDays.add((CalendarCellView)view.findViewById(R.id.day_2));
                 this.mDays.add((CalendarCellView)view.findViewById(R.id.day_3));
@@ -60,10 +61,22 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
 
     private Context mContext;
     private List<MonthDescriptor> mMonthsList;
+    private static RangeSelectionListener sListener;
+    private static Calendar startCal, endCal;
+    private static boolean startRangeSelection = false, stopRangeSelection = false;
 
     public MonthAdapter(Context context, List<MonthDescriptor> monthsList){
         this.mContext =context;
         this.mMonthsList = new ArrayList<>(monthsList);
+    }
+
+    public void initializeCalendars(){
+        this.startCal = Calendar.getInstance();
+        this.endCal = Calendar.getInstance();
+    }
+
+    public void setRangeSelectionListener(RangeSelectionListener listener){
+        this.sListener = listener;
     }
 
     @Override
@@ -77,7 +90,6 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
     public void onBindViewHolder(MonthViewHolder holder, int position) {
         MonthDescriptor descriptor = mMonthsList.get(position);
         holder.mMonthName.setText(descriptor.getMonthName());
-
         //set days
         initDaysOfMonth(holder, descriptor);
     }
@@ -103,8 +115,9 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
             if (startDate <= descriptor.getDaysOfMonth()){
                 holder.mDays.get(i).setVisibility(View.VISIBLE);
                 setCalendarCellState(descriptor.getDateStateInfo()[startDate - 1], holder.mDays.get(i));
+                holder.mDays.get(i).setOnClickListener(new CellClickListener());
                 holder.mDays.get(i).setText(String.valueOf(startDate++));
-                if (startDate > descriptor.getDaysOfMonth()){ // true when startDate at prev step == last date of month
+                if (startDate > descriptor.getDaysOfMonth()){ // true when startCal at prev step == last date of month
                     break;
                 }
             }
@@ -127,6 +140,89 @@ public class MonthAdapter extends RecyclerView.Adapter<MonthAdapter.MonthViewHol
         cell.setRangeState(state.getRangeState());
         cell.setSelectable(state.isSelectable());
         cell.setToday(state.isToday());
+        cell.setTag(state);
+    }
+
+    private void recalculateRange(){
+        int rangeStart = 0;
+        for (MonthDescriptor descriptor : mMonthsList){
+            for (DateStateDescriptor descriptor1 : descriptor.getDateStateInfo()){
+                if (rangeStart == 0) {
+                    if (descriptor1.getRangeState() == DateStateDescriptor.RangeState.START) {
+                        rangeStart++;
+                        continue;
+                    }
+                }
+                if (rangeStart > 0){
+                    if (descriptor1.getRangeState() == DateStateDescriptor.RangeState.START ||
+                            descriptor1.getRangeState() == DateStateDescriptor.RangeState.END) {
+                        descriptor1.setRangeState(DateStateDescriptor.RangeState.END);
+                        return;
+                    } else {
+                        descriptor1.setRangeState(DateStateDescriptor.RangeState.MIDDLE);
+                        rangeStart++;
+                    }
+                }
+            }
+        }
+    }
+
+    private void invalidatePrevDateRange(){
+        for (MonthDescriptor descriptor : mMonthsList){
+            for (DateStateDescriptor descriptor1 : descriptor.getDateStateInfo()){
+                if (descriptor1.getRangeState() != DateStateDescriptor.RangeState.NONE){
+                    if (descriptor1.getRangeState() == DateStateDescriptor.RangeState.END) {
+                        descriptor1.setRangeState(DateStateDescriptor.RangeState.NONE);
+                        return;
+                    }
+                    descriptor1.setRangeState(DateStateDescriptor.RangeState.NONE);
+                }
+            }
+        }
+    }
+
+    private void validateAndMarkBoundaries(DateStateDescriptor descriptor){
+        if (!startRangeSelection){
+            startRangeSelection = true;
+            startCal.set(descriptor.getYear(), descriptor.getMonth(), descriptor.getDay());
+            descriptor.setRangeState(DateStateDescriptor.RangeState.START);
+        } else if (!stopRangeSelection){
+            stopRangeSelection = true;
+            endCal.set(descriptor.getYear(), descriptor.getMonth(), descriptor.getDay());
+            if (endCal.compareTo(startCal) < 0){
+                Calendar temp = startCal;
+                startCal = endCal;
+                endCal = temp;
+                descriptor.setRangeState(DateStateDescriptor.RangeState.START);
+            } else if (endCal.compareTo(startCal) == 0){
+                descriptor.setRangeState(DateStateDescriptor.RangeState.NONE);
+                descriptor.setSingleSelection(true);
+            } else {
+                descriptor.setRangeState(DateStateDescriptor.RangeState.END);
+            }
+            //calculate range
+            recalculateRange();
+            if (sListener != null) {
+                sListener.onRangeSelected(startCal.getTime(), endCal.getTime());
+            }
+        } else {
+            startRangeSelection = false;
+            stopRangeSelection = false;
+            invalidatePrevDateRange();
+            validateAndMarkBoundaries(descriptor);
+        }
+        notifyDataSetChanged();
+    }
+
+    private class CellClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            Object tag = v.getTag();
+            if (tag instanceof DateStateDescriptor) { // it is a clickable cell
+                DateStateDescriptor descriptor = (DateStateDescriptor) tag;
+                validateAndMarkBoundaries(descriptor);
+            }
+        }
     }
 
 }

@@ -28,7 +28,7 @@ public class MonthDescriptor {
                 this.dateStateInfo[i] = new DateStateDescriptor(i + 1, month, year, false, false, DateStateDescriptor.RangeState.NONE, true);
             }
             if (i < this.daysOfMonth) {
-                this.dateStateInfo[i] = new DateStateDescriptor(++i, month, year, true, true, DateStateDescriptor.RangeState.NONE, true);
+                this.dateStateInfo[i] = new DateStateDescriptor(++i, month, year, currDate <= daysOfMonth, currDate <= daysOfMonth, DateStateDescriptor.RangeState.NONE, true);
             }
         }
         //all dates are selectable

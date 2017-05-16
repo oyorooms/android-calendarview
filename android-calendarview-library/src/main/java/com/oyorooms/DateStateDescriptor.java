@@ -14,17 +14,17 @@ public class DateStateDescriptor {
     private final boolean isToday;
     private final boolean isSelectable;
     private RangeState rangeState;
-    private final boolean isCurrSelection;
+    private boolean isSingleSelection;
 
     public DateStateDescriptor(int day, int month, int year, boolean today, boolean selectable,
-                               RangeState rangeState, boolean isCurrSelection) {
+                               RangeState rangeState, boolean isSingleSelection) {
         this.day = day;
         this.month = month;
         this.year = year;
         this.isToday = today;
         this.isSelectable = selectable;
         this.rangeState = rangeState;
-        this.isCurrSelection = isCurrSelection;
+        this.isSingleSelection = isSingleSelection;
     }
 
     public int getDay() {
@@ -51,8 +51,16 @@ public class DateStateDescriptor {
         return rangeState;
     }
 
-    public boolean isCurrSelection() {
-        return isCurrSelection;
+    public boolean isSingleSelection() {
+        return isSingleSelection;
+    }
+
+    public void setRangeState(RangeState rangeState) {
+        this.rangeState = rangeState;
+    }
+
+    public void setSingleSelection(boolean singleSelection) {
+        isSingleSelection = singleSelection;
     }
 
     @Override
@@ -66,8 +74,8 @@ public class DateStateDescriptor {
                 + isSelectable
                 + ", rangeState="
                 + rangeState
-                + ", isCurrSelection="
-                + isCurrSelection
+                + ", isSingleSelection="
+                + isSingleSelection
                 + '}';
     }
 }

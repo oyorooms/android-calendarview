@@ -86,7 +86,7 @@ public class CalendarCellView extends AppCompatTextView {
         }
 
         if (rangeState == RangeState.START) {
-            mergeDrawableStates(drawableState, STATE_RANGE_START); //this.isPredefinedRange ? STATE_PREDEFINED_RANGE_START :
+            mergeDrawableStates(drawableState, STATE_RANGE_START);
         } else if (rangeState == RangeState.MIDDLE) {
             mergeDrawableStates(drawableState, STATE_RANGE_MIDDLE);
         } else if (rangeState == RangeState.END) {
@@ -94,7 +94,7 @@ public class CalendarCellView extends AppCompatTextView {
         }
 
         if (predefinedRangeState == RangeState.START){
-            mergeDrawableStates(drawableState, STATE_PREDEFINED_RANGE_START); //this.isPredefinedRange ? STATE_PREDEFINED_RANGE_START :
+            mergeDrawableStates(drawableState, STATE_PREDEFINED_RANGE_START); 
         } else if (predefinedRangeState == RangeState.MIDDLE) {
             mergeDrawableStates(drawableState, STATE_PRE_DEFINED_RANGE_MIDDLE);
         } else if (predefinedRangeState == RangeState.END) {

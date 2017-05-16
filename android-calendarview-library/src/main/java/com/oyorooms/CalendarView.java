@@ -23,11 +23,9 @@ import java.util.Locale;
 public class CalendarView extends LinearLayout {
 
     private Calendar mToday;
-    private LinearLayout mParentLayout;
-    private RecyclerView mMonthsList;
     private List<MonthDescriptor> mMonthDescriptorsList;
     private SimpleDateFormat mFullMonthNameFormat;
-    private MonthAdapter mMonthsAdapter;
+    private RangeSelectionListener mRangeSelectionListener;
 
     private int numberOfPreviousMonths;
     private int numberOfFutureMonths;
@@ -43,8 +41,8 @@ public class CalendarView extends LinearLayout {
 
     public CalendarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.numberOfPreviousMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.prev_months, NA) : NA;
-        this.numberOfFutureMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.next_months, NA) : NA;
+        this.numberOfPreviousMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.prev_months, 4) : 4;
+        this.numberOfFutureMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.next_months, 4) : 4;
         initData();
         initView();
     }
@@ -55,6 +53,10 @@ public class CalendarView extends LinearLayout {
         this.numberOfFutureMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.next_months, NA) : NA;
         initData();
         initView();
+    }
+
+    public void setRangeSelectionListener(RangeSelectionListener listener){
+        this.mRangeSelectionListener = listener;
     }
 
     private void initData(){
@@ -115,7 +117,7 @@ public class CalendarView extends LinearLayout {
                         mToday.get(Calendar.DAY_OF_MONTH) : DateStateDescriptor.noCurrDateInMonth;
         if (currDate == DateStateDescriptor.noCurrDateInMonth){
             if (calendar.compareTo(mToday) < 0){  //for prev months everything is unselectable. So currDate == daysCount
-                currDate = daysCount;
+                currDate = daysCount + 1;
             }
             //for future months everything is selectable. So currDate == 0
         }
@@ -149,11 +151,13 @@ public class CalendarView extends LinearLayout {
 
     private void initView() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.mParentLayout = (LinearLayout) inflater.inflate(R.layout.calendar_view, this, true);
-        this.mMonthsList = (RecyclerView) mParentLayout.findViewById(R.id.rv_months_list);
-        this.mMonthsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        LinearLayout parentLayout = (LinearLayout) inflater.inflate(R.layout.calendar_view, this, true);
+        RecyclerView monthsList = (RecyclerView) parentLayout.findViewById(R.id.rv_months_list);
+        monthsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         //attach adapter
-        this.mMonthsAdapter = new MonthAdapter(getContext(), this.mMonthDescriptorsList);
-        this.mMonthsList.setAdapter(this.mMonthsAdapter);
+        MonthAdapter monthsAdapter = new MonthAdapter(getContext(), this.mMonthDescriptorsList);
+        monthsAdapter.setRangeSelectionListener(this.mRangeSelectionListener);
+        monthsAdapter.initializeCalendars();
+        monthsList.setAdapter(monthsAdapter);
     }
 }
