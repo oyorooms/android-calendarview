@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
-import com.oyorooms.calendar.enums.DateSelectionMode;
 import com.oyorooms.calendar.listeners.DateSelectionListener;
 import com.oyorooms.calendar.ui.OYOCalendarView;
 
@@ -21,10 +20,7 @@ public class CalendarActivity extends Activity implements DateSelectionListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         OYOCalendarView mOYOCalendarView = (OYOCalendarView) findViewById(R.id.calendar_view);
-        mOYOCalendarView.setSelectionMode(DateSelectionMode.RANGE);
         mOYOCalendarView.setDateSelectionListener(this);
-        mOYOCalendarView.setPredefinedRange(getPredefinedRange(0), getPredefinedRange(1));
-        mOYOCalendarView.reCreateCalendar();
     }
 
     @Override
@@ -43,9 +39,9 @@ public class CalendarActivity extends Activity implements DateSelectionListener{
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         if (option == 0){
-            calendar.set(2017, Calendar.MAY, 15);
+            calendar.set(2017, Calendar.MAY, 5);
         } else {
-            calendar.set(2017, Calendar.MAY, 22);
+            calendar.set(2017, Calendar.MAY, 10);
         }
         return calendar;
     }
