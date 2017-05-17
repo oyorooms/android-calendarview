@@ -7,6 +7,7 @@
     <declare-styleable name="calendar_cell">
         <attr name="state_selectable" format="boolean"/>
         <attr name="state_today" format="boolean"/>
+        <attr name="state_range_open" format="boolean"/>
         <attr name="state_range_start" format="boolean"/>
         <attr name="state_range_end" format="boolean"/>
         <attr name="state_range_middle" format="boolean"/>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <com.oyorooms.OYOCalendarView
+    <com.oyorooms.calendar.ui.OYOCalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

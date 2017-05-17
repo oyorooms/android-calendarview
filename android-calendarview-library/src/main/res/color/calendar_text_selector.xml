@@ -6,8 +6,15 @@
   <item app:state_range_start="true" android:color="@color/colorWhite"/>
   <item app:state_range_middle="true" android:color="@color/colorWhite"/>
   <item app:state_range_end="true" android:color="@color/colorWhite"/>
+  <item app:state_range_open="true" android:color="@color/colorTextDisabled"/>
   <item android:state_pressed="true" android:color="@color/colorWhite"/>
   <item app:state_single_selection="true" android:color="@color/colorWhite"/>
+  <item app:state_pre_defined_range_start="true" app:state_today="false" android:color="@color/colorTextDisabled"/>
+  <item app:state_pre_defined_range_start="true" app:state_today="true" android:color="@color/colorPrimary"/>
+  <item app:state_pre_defined_range_end="true" app:state_today="false" android:color="@color/colorTextDisabled"/>
+  <item app:state_pre_defined_range_end="true" app:state_today="true" android:color="@color/colorPrimary"/>
+  <item app:state_pre_defined_range_middle="true" app:state_today="false" android:color="@color/colorTextDisabled"/>
+  <item app:state_pre_defined_range_middle="true" app:state_today="true" android:color="@color/colorPrimary"/>
   <item app:state_today="true" android:color="@color/colorPrimaryText"/>
   <item app:state_selectable="false" android:color="@color/colorTextDisabled"/>
   <item android:color="@color/colorTextActive"/>

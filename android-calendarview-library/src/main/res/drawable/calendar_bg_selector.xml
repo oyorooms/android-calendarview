@@ -5,6 +5,7 @@
     <item app:state_selectable="true" app:state_range_start="true" android:drawable="@drawable/bg_range_selector_start"/>
     <item app:state_selectable="true" app:state_range_end="true" android:drawable="@drawable/bg_range_selector_end"/>
     <item app:state_selectable="true" app:state_range_middle="true" android:drawable="@drawable/bg_current_highlighted"/>
+    <item app:state_selectable="true" app:state_range_open="true" android:drawable="@drawable/bg_predefined_range_end"/>
     <item app:state_pre_defined_range_start="true" android:drawable="@drawable/bg_predefined_range_start"/>
     <item app:state_pre_defined_range_end="true" android:drawable="@drawable/bg_predefined_range_end"/>
     <item app:state_pre_defined_range_middle="true" android:drawable="@drawable/bg_predefined_highlighted"/>

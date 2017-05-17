@@ -1,4 +1,4 @@
-package com.oyorooms;
+package com.oyorooms.calendar.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tripadvisor.R;
+import com.oyorooms.R;
+import com.oyorooms.calendar.listeners.DateSelectionListener;
+import com.oyorooms.calendar.models.DateStateDescriptor;
+import com.oyorooms.calendar.models.MonthDescriptor;
+import com.oyorooms.calendar.ui.CalendarCellView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,7 +94,7 @@ public abstract class BaseMonthAdapter extends RecyclerView.Adapter<BaseMonthAda
     }
 
     public void setDateSelectionListener(DateSelectionListener listener){
-        this.sListener = listener;
+        sListener = listener;
     }
 
     @Override

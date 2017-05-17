@@ -5,67 +5,48 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
-import com.oyorooms.OYOCalendarView;
+import com.oyorooms.calendar.enums.DateSelectionMode;
+import com.oyorooms.calendar.listeners.DateSelectionListener;
+import com.oyorooms.calendar.ui.OYOCalendarView;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-
-import static java.util.Calendar.HOUR_OF_DAY;
-import static java.util.Calendar.MILLISECOND;
-import static java.util.Calendar.MINUTE;
-import static java.util.Calendar.SECOND;
 
 
-public class CalendarActivity extends Activity{  //implements DateSelectableFilter, OnInvalidDateSelectedListener
-
-    private OYOCalendarView mOYOCalendarView;
-    private Calendar today = Calendar.getInstance();
-    private Locale locale;
+public class CalendarActivity extends Activity implements DateSelectionListener{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        mOYOCalendarView = (OYOCalendarView) findViewById(R.id.calendar_view);
-        locale = Locale.US;
-        today = Calendar.getInstance(locale);
-//        final Calendar dec2016 = buildCal(2016, DECEMBER, 1);
-//        final Calendar dec2017 = buildCal(2017, DECEMBER, 1);
-//        Calendar may2017 = buildCal(2017, MAY, 1);
-//        mCalendarView.init(dec2016.getTime(), dec2017.getTime(), locale)
-//                .inMode(RANGE).withSelectedDate(may2017.getTime());
-//        setMidnight(today);
+        OYOCalendarView mOYOCalendarView = (OYOCalendarView) findViewById(R.id.calendar_view);
+        mOYOCalendarView.setSelectionMode(DateSelectionMode.RANGE);
+        mOYOCalendarView.setDateSelectionListener(this);
+        mOYOCalendarView.setPredefinedRange(getPredefinedRange(0), getPredefinedRange(1));
+        mOYOCalendarView.reCreateCalendar();
     }
 
-    /**
-     * Clears out the hours/minutes/seconds/millis of a Calendar.
-     */
-    private static void setMidnight(Calendar cal) {
-        cal.set(HOUR_OF_DAY, 0);
-        cal.set(MINUTE, 0);
-        cal.set(SECOND, 0);
-        cal.set(MILLISECOND, 0);
+    @Override
+    public void onRangeSelected(Date startDate, Date endDate) {
+        Log.e("Range :: start - end  ", startDate + "  " + endDate);
     }
 
-    //@Override
-    public boolean isDateSelectable(Date date) {
-        boolean selectable = false;
-        if (today.getTime().compareTo(date) <= 0) {
-            selectable = true;
+    @Override
+    public void onDateSelected(Date date) {
+        Log.e("Date :: ", date + "  ");
+    }
+
+    private Calendar getPredefinedRange(int option){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        if (option == 0){
+            calendar.set(2017, Calendar.MAY, 15);
+        } else {
+            calendar.set(2017, Calendar.MAY, 22);
         }
-        return selectable;
-    }
-
-    //@Override
-    public void onInvalidDateSelected(Date date) {
-        Log.d("CalendarActivity", "onInvalidDateSelected:" + date.toString());
-    }
-
-    private Calendar buildCal(int year, int month, int day) {
-        Calendar jumpToCal = Calendar.getInstance(locale);
-        jumpToCal.set(year, month, day);
-        return jumpToCal;
+        return calendar;
     }
 }
