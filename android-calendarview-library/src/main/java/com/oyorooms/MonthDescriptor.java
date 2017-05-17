@@ -25,15 +25,15 @@ public class MonthDescriptor {
         int i = 0;
         if (currDate > DateStateDescriptor.noCurrDateInMonth){ //only certain dates are selectable
             for (; i < currDate - 1 && i < this.daysOfMonth; i++){
-                this.dateStateInfo[i] = new DateStateDescriptor(i + 1, month, year, false, false, DateStateDescriptor.RangeState.NONE, true);
+                this.dateStateInfo[i] = new DateStateDescriptor(i + 1, month, year, false, false, DateStateDescriptor.RangeState.NONE, false);
             }
             if (i < this.daysOfMonth) {
-                this.dateStateInfo[i] = new DateStateDescriptor(++i, month, year, currDate <= daysOfMonth, currDate <= daysOfMonth, DateStateDescriptor.RangeState.NONE, true);
+                this.dateStateInfo[i] = new DateStateDescriptor(++i, month, year, currDate <= daysOfMonth, currDate <= daysOfMonth, DateStateDescriptor.RangeState.NONE, false);
             }
         }
         //all dates are selectable
         for (; i < this.daysOfMonth; i++){
-            this.dateStateInfo[i] = new DateStateDescriptor(i + 1, month, year, false, true, DateStateDescriptor.RangeState.NONE, true);
+            this.dateStateInfo[i] = new DateStateDescriptor(i + 1, month, year, false, true, DateStateDescriptor.RangeState.NONE, false);
         }
     }
 

@@ -13,6 +13,7 @@
         <attr name="state_pre_defined_range_start" format="boolean"/>
         <attr name="state_pre_defined_range_end" format="boolean"/>
         <attr name="state_pre_defined_range_middle" format="boolean"/>
+        <attr name="state_single_selection" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="calendar_size">

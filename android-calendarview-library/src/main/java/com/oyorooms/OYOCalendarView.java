@@ -20,34 +20,37 @@ import java.util.Locale;
  * Created by aneesha.bahukhandi on 15/05/17
  */
 
-public class CalendarView extends LinearLayout {
+public class OYOCalendarView extends LinearLayout {
 
     private Calendar mToday;
     private List<MonthDescriptor> mMonthDescriptorsList;
     private SimpleDateFormat mFullMonthNameFormat;
-    private RangeSelectionListener mRangeSelectionListener;
+    private DateSelectionListener mDateSelectionListener;
 
     private int numberOfPreviousMonths;
     private int numberOfFutureMonths;
+    private int mScrollPosition = 0;
+    private DateSelectionMode mSelectionMode = DateSelectionMode.SINGLE;
 
     private static final int NA = 0;
     private static final int rotation = 1;
+    private static final int defaultMonths = 4;
 
-    public CalendarView(Context context) {
+    public OYOCalendarView(Context context) {
         super(context);
         initData();
         initView();
     }
 
-    public CalendarView(Context context, @Nullable AttributeSet attrs) {
+    public OYOCalendarView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.numberOfPreviousMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.prev_months, 4) : 4;
-        this.numberOfFutureMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.next_months, 4) : 4;
+        this.numberOfPreviousMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.prev_months, defaultMonths) : defaultMonths;
+        this.numberOfFutureMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.next_months, defaultMonths) : defaultMonths;
         initData();
         initView();
     }
 
-    public CalendarView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public OYOCalendarView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.numberOfPreviousMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.prev_months, NA) : NA;
         this.numberOfFutureMonths = attrs != null ? attrs.getAttributeIntValue(R.attr.next_months, NA) : NA;
@@ -55,8 +58,13 @@ public class CalendarView extends LinearLayout {
         initView();
     }
 
-    public void setRangeSelectionListener(RangeSelectionListener listener){
-        this.mRangeSelectionListener = listener;
+    public void setDateSelectionListener(DateSelectionListener listener){
+        this.mDateSelectionListener = listener;
+    }
+
+    public void setSelectionMode(DateSelectionMode mSelectionMode) {
+        this.mSelectionMode = mSelectionMode;
+        initView();
     }
 
     private void initData(){
@@ -90,6 +98,7 @@ public class CalendarView extends LinearLayout {
                 calculationCalendar.set(Calendar.MONTH, calculationCalendar.get(Calendar.MONTH) + 1);
             }
         }
+        this.mScrollPosition = mMonthDescriptorsList.size();
         this.mMonthDescriptorsList.add(getNewMonthDescriptorForMonth(calculationCalendar));
         if (this.numberOfFutureMonths > NA){
             int i = 0;
@@ -153,11 +162,21 @@ public class CalendarView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout parentLayout = (LinearLayout) inflater.inflate(R.layout.calendar_view, this, true);
         RecyclerView monthsList = (RecyclerView) parentLayout.findViewById(R.id.rv_months_list);
-        monthsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        monthsList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         //attach adapter
-        MonthAdapter monthsAdapter = new MonthAdapter(getContext(), this.mMonthDescriptorsList);
-        monthsAdapter.setRangeSelectionListener(this.mRangeSelectionListener);
-        monthsAdapter.initializeCalendars();
-        monthsList.setAdapter(monthsAdapter);
+        BaseMonthAdapter adapter = getAdapter();
+        adapter.setDateSelectionListener(this.mDateSelectionListener);
+        monthsList.setAdapter(adapter);
+        monthsList.scrollToPosition(mScrollPosition);
+    }
+
+    private BaseMonthAdapter getAdapter(){
+        switch (mSelectionMode){
+            case RANGE:
+                return new RangeInMonthAdapter(getContext(), this.mMonthDescriptorsList);
+            case SINGLE:
+            default:
+                return new SingleSelectionInMonthAdapter(getContext(), mMonthDescriptorsList);
+        }
     }
 }

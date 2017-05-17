@@ -8,11 +8,11 @@
     <item app:state_pre_defined_range_start="true" android:drawable="@drawable/bg_predefined_range_start"/>
     <item app:state_pre_defined_range_end="true" android:drawable="@drawable/bg_predefined_range_end"/>
     <item app:state_pre_defined_range_middle="true" android:drawable="@drawable/bg_predefined_highlighted"/>
-    <item android:state_pressed="true" app:state_selectable="true" android:drawable="@drawable/bg_range_selector_start"/>
+    <item app:state_single_selection="true" android:drawable="@drawable/bg_current_highlighted"/>
     <item
         app:state_today="true" app:state_pre_defined_range_start="false"
         app:state_pre_defined_range_end="false" app:state_pre_defined_range_middle="false"
-        app:state_range_start="false" app:state_range_end="false" app:state_range_middle="false"
+        app:state_range_start="false" app:state_range_end="false" app:state_range_middle="false" app:state_single_selection="false"
         android:drawable="@drawable/calendar_current_day_bg"/>
     <item>
         <color android:color="@color/calendar_active_month_bg"/>

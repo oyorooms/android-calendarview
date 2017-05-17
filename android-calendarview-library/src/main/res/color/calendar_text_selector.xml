@@ -7,7 +7,8 @@
   <item app:state_range_middle="true" android:color="@color/colorWhite"/>
   <item app:state_range_end="true" android:color="@color/colorWhite"/>
   <item android:state_pressed="true" android:color="@color/colorWhite"/>
-  <item app:state_today="true" android:color="@color/calendar_current_day_text"/>
+  <item app:state_single_selection="true" android:color="@color/colorWhite"/>
+  <item app:state_today="true" android:color="@color/colorPrimaryText"/>
   <item app:state_selectable="false" android:color="@color/colorTextDisabled"/>
   <item android:color="@color/colorTextActive"/>
 </selector>

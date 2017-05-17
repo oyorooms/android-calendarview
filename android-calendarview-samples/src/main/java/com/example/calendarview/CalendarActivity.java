@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
-import com.oyorooms.CalendarView;
+import com.oyorooms.OYOCalendarView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +19,7 @@ import static java.util.Calendar.SECOND;
 
 public class CalendarActivity extends Activity{  //implements DateSelectableFilter, OnInvalidDateSelectedListener
 
-    private CalendarView mCalendarView;
+    private OYOCalendarView mOYOCalendarView;
     private Calendar today = Calendar.getInstance();
     private Locale locale;
 
@@ -28,7 +28,7 @@ public class CalendarActivity extends Activity{  //implements DateSelectableFilt
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        mCalendarView = (CalendarView) findViewById(R.id.calendar_view);
+        mOYOCalendarView = (OYOCalendarView) findViewById(R.id.calendar_view);
         locale = Locale.US;
         today = Calendar.getInstance(locale);
 //        final Calendar dec2016 = buildCal(2016, DECEMBER, 1);
